@@ -1,4 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="1" systemVersion="11A491" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
-    <elements/>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="16G1114" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="PopularTags" representedClassName="PopularTags" syncable="YES">
+        <attribute name="idPopular" attributeType="Integer 32" minValueString="0" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="popularName" attributeType="String" syncable="YES"/>
+        <relationship name="synonyms" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SynonymTags" inverseName="popular" inverseEntity="SynonymTags" syncable="YES"/>
+    </entity>
+    <entity name="SynonymTags" representedClassName="SynonymTags" syncable="YES">
+        <attribute name="idOfPopular" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="idSynonym" optional="YES" attributeType="Integer 32" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
+        <attribute name="synonymName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="popular" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="PopularTags" inverseName="synonyms" inverseEntity="PopularTags" syncable="YES"/>
+    </entity>
+    <elements>
+        <element name="PopularTags" positionX="-7715" positionY="-8694" width="128" height="88"/>
+        <element name="SynonymTags" positionX="-7956" positionY="-8716" width="108" height="103"/>
+    </elements>
 </model>
