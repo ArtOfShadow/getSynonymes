@@ -17,7 +17,8 @@ class PopularTagCell: UITableViewCell {
     
     func setupCell (_ popularTag: (idx: Int, name: String)){
        lblPopularTag.text = popularTag.name
-       lblPopularTagIdx.text =  String (popularTag.idx) //
+       lblPopularTagIdx.text =  String (popularTag.idx)
+    //
     }
     
     
