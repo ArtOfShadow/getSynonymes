@@ -19,6 +19,7 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
     @IBOutlet weak var lblCurrentWord: UILabel!
     @IBOutlet weak var spinner: UIActivityIndicatorView!
     @IBOutlet weak var tablePopular: UITableView!
+    @IBOutlet weak var progress: UIProgressView!
     
     
     var model = SynonymsModel()
@@ -32,6 +33,8 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         textViewSynonyms.isEditable = false
         
         model.senderVC = self
+        model.addEvent()
+        
     }
     
     
@@ -75,13 +78,19 @@ class MainController: UIViewController, UITableViewDelegate, UITableViewDataSour
         guard let word = textForSend.text else {return}
 
         model.clearTheTextAndResignFirstResponder(self)
-        model.sendRequest(self, word: word.trimmingCharacters(in: .whitespacesAndNewlines))
+        
+        model.sendRequest { (true) in
+            print ("true")
+        }
 
     }
     
     
     
     @IBAction func taptaptap(_ sender: Any) {
+        model.readFileOfPopularTags(self) { (complete) in
+            tablePopular.reloadData()
+        }
         model.saveToFile()
     }
     

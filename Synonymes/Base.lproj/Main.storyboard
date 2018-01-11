@@ -136,6 +136,9 @@
                                     <action selector="taptaptap:" destination="BYZ-38-t0r" eventType="touchUpInside" id="qvw-FY-fn6"/>
                                 </connections>
                             </button>
+                            <progressView opaque="NO" contentMode="scaleToFill" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Nr2-cc-VrS">
+                                <rect key="frame" x="12" y="102" width="353" height="2"/>
+                            </progressView>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
@@ -147,10 +150,12 @@
                             <constraint firstItem="mhq-U6-GfA" firstAttribute="top" secondItem="YIX-Mx-naG" secondAttribute="bottom" constant="8" id="CFc-OD-r3d"/>
                             <constraint firstItem="Ai5-RT-NX3" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="CUD-De-m5b"/>
                             <constraint firstItem="YIX-Mx-naG" firstAttribute="top" secondItem="eaK-ij-2aC" secondAttribute="top" id="EQB-Rb-Za5"/>
+                            <constraint firstItem="Nr2-cc-VrS" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="12" id="G0x-d1-hLy"/>
                             <constraint firstItem="mhq-U6-GfA" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="IXF-s7-dSZ"/>
                             <constraint firstItem="YIX-Mx-naG" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="10" id="MCE-Db-plT"/>
                             <constraint firstItem="Ai5-RT-NX3" firstAttribute="top" secondItem="mhq-U6-GfA" secondAttribute="bottom" constant="30" id="OOh-FI-yWJ"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="eaK-ij-2aC" secondAttribute="trailing" constant="10" id="Qgr-Km-huH"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Nr2-cc-VrS" secondAttribute="trailing" constant="10" id="Sq1-vc-Mxk"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="mhq-U6-GfA" secondAttribute="trailing" constant="10" id="Uuu-eV-rk7"/>
                             <constraint firstItem="ZMb-DD-rL0" firstAttribute="leading" secondItem="v6Q-WE-Gai" secondAttribute="trailing" constant="43.5" id="Z6l-mX-5jc"/>
                             <constraint firstItem="xXl-OK-B75" firstAttribute="leading" secondItem="YIX-Mx-naG" secondAttribute="leading" id="dK0-GH-0Bx"/>
@@ -159,11 +164,13 @@
                             <constraint firstItem="eaK-ij-2aC" firstAttribute="top" secondItem="8VC-5z-lQD" secondAttribute="bottom" constant="4" id="gCk-Ld-7v6"/>
                             <constraint firstItem="Ai5-RT-NX3" firstAttribute="top" secondItem="v6Q-WE-Gai" secondAttribute="bottom" constant="4.5" id="pey-9t-ucx"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="Ai5-RT-NX3" secondAttribute="trailing" constant="10" id="qS9-oY-95b"/>
+                            <constraint firstItem="Nr2-cc-VrS" firstAttribute="top" secondItem="YIX-Mx-naG" secondAttribute="bottom" constant="2" id="xdd-Ge-eye"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
                     <connections>
                         <outlet property="lblCurrentWord" destination="ZMb-DD-rL0" id="LRL-u7-Rex"/>
+                        <outlet property="progress" destination="Nr2-cc-VrS" id="MPB-vU-UzQ"/>
                         <outlet property="spinner" destination="PoM-v7-Zwx" id="fkJ-gJ-ppg"/>
                         <outlet property="tablePopular" destination="mhq-U6-GfA" id="5sn-f0-xfX"/>
                         <outlet property="textForSend" destination="YIX-Mx-naG" id="xfR-9L-bJt"/>

@@ -50,8 +50,8 @@ class SynonymsModel {
     
     //MARK: -
     /// Clear old text
-    private func clearTheText (_ view: UIViewController){
-        if let view = view as? MainController {
+    private func clearTheText (){
+        if let view = senderVC as? MainController {
             view.textViewSynonyms.text = ""
             view.textViewSynonyms.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
             print("clear the old text")
@@ -61,21 +61,18 @@ class SynonymsModel {
     
     /// Заполнить поле синонимами
     /// word передается только для отображения на вью
-    /// - Parameters:
-    ///   - view: Вьюха - MainController
-    ///   - word: Текущее слово
-    private func fillTheSynonyms (_ view: UIViewController, word: String){
-        if let view = view as? MainController {
+    private func fillTheSynonyms (){
+        if let view = senderVC as? MainController {
             view.total.text = "total = " + String (synonymsList.synonymsArray.count)
-            view.lblCurrentWord.text = "current word = " + word
-            
+            view.lblCurrentWord.text = "current word = " + selectedPopularTagProps.name
+            print ("fillTheSynonyms (). synonymsList.synonymsArray.count = \(self.synonymsList.synonymsArray.count)")
             if synonymsList.synonymsArray.count > 0 {
                 
                 for idx in 0...synonymsList.synonymsArray.count - 1 {
+                    print ("fillTheSynonyms (). idx = \(idx)")
                     view.textViewSynonyms.text! += synonymsList.synonymsArray[idx]  + ", "//arrOfResponse[idx] + ", "
                 }
-             print ("synonymsList.synonymsArray.count = \(synonymsList.synonymsArray.count)")
-             addToBase ()
+             //addToBase ()
             } else { print ("synonymsList.synonymsArray.count = \(synonymsList.synonymsArray.count)")}
         }
     }
@@ -91,15 +88,15 @@ class SynonymsModel {
     }
     
     /// spinner startAnimating()
-    private func spinnerStart (_ view: UIViewController){
-        if let view = view as? MainController {
+    private func spinnerStart (){
+        if let view = senderVC as? MainController {
             view.spinner.startAnimating()
         }
     }
     
     /// spinner stopAnimating()
-    private func spinnerStop (_ view: UIViewController){
-        if let view = view as? MainController {
+    private func spinnerStop (){
+        if let view = senderVC as? MainController {
             view.spinner.stopAnimating()
         }
     }
@@ -108,7 +105,7 @@ class SynonymsModel {
     
     /// Clear the input text and resign first responder
     func clearTheTextAndResignFirstResponder (_ view: UIViewController){
-        if let view = view as? MainController {
+        if let view = senderVC as? MainController {
             view.textForSend.text = ""
             view.textForSend.resignFirstResponder()
         }
@@ -202,13 +199,10 @@ class SynonymsModel {
     
     
     @objc func responseTaken (){
-        if let view = senderVC as? MainController {
-            
-            DispatchQueue.main.async { self.fillTheSynonyms (view, word: word) }
-            DispatchQueue.main.async { self.spinnerStop(view) }
-
+        DispatchQueue.main.async {
+            self.fillTheSynonyms ()
+            self.spinnerStop()
         }
-        
     }
     
     
@@ -239,10 +233,10 @@ class SynonymsModel {
     ///   - view: Вьюха - MainController
     ///   - word: Текущее слово
     
-    func sendRequest (_ view: UIViewController, word: String){
+    func sendRequest (completion: @escaping (_ complete: Bool)->() ){
         
         var getURL: String = ""
-        getURL = "https://api.datamuse.com/words?ml=" + word + "&max=150"
+        getURL = "https://api.datamuse.com/words?ml=" + selectedPopularTagProps.name + "&max=150"
         
         guard let url = URL (string: getURL ) else { return }
         
@@ -263,11 +257,13 @@ class SynonymsModel {
                         self.synonymsList.synonymId.append(self.synonymsList.synonymsArray.count)
                         self.synonymsList.synonymsArray.append(item.word!)
                     }
-                    
+                    print ("sendRequest. synonymsList.synonymsArray.count = \(self.synonymsList.synonymsArray.count)")
+                    completion(true)
                     
                 } catch let errorNo {
                     print ("Error JSON decoding. err = ", errorNo)
                 }
+               
             }
             }.resume()
     }
@@ -283,18 +279,30 @@ class SynonymsModel {
         
         if let view = view as? MainController {
             
-            /// if selected word not nil - call send request
-            let word = selectedPopularTagProps.name
-            
-                view.textForSend.text = word
-                clearTheTextAndResignFirstResponder(view)
-            
-                clearTheText (view)
-                spinnerStart(view)
+           view.textForSend.text = selectedPopularTagProps.name
+           clearTheTextAndResignFirstResponder(view)
+          
+           clearTheText ()
+           spinnerStart()
 
-                sendRequest(view, word: word.trimmingCharacters(in: .whitespacesAndNewlines))
+            sendRequest(completion: { (true) in
+                print ("getSelectedPopularTag -> true")
+            })
         }
     }
+    
+    
+    
+    private func showProgress (pos: Int){
+        if let view = senderVC as? MainController {
+            DispatchQueue.main.async {
+                view.progress.progress = Float ( pos * 100 / self.popularTagsList.count )
+            }
+            
+        }
+    }
+    
+    
     
     /// Сохранить данные в файл CSV
     /// Формат:
@@ -313,15 +321,30 @@ class SynonymsModel {
             
             var allSynonyms: String = ""
             
-            for idxOfPopular in 0...popularTagsList.count - 1 {
-                for idx in 0...synonymsList.synonymsArray.count - 1 {
-                    allSynonyms += ", " + synonymsList.synonymsArray [idx]
-                }
-                
-                //sendRequest(view, word: word.trimmingCharacters(in: .whitespacesAndNewlines))
-            }
+            print ("popularTagsList.count = \(popularTagsList.count)")
             
-            try! csv.write(row: ["-1", "na", allSynonyms])
+            
+            for idxOfPopular in 0...popularTagsList.count - 1 {
+                selectedPopularTagProps.name = popularTagsList[idxOfPopular].name
+                selectedPopularTagProps.id   = popularTagsList[idxOfPopular].idx
+
+                sendRequest (completion: { (true) in
+                    DispatchQueue.main.async {
+                        self.fillTheSynonyms ()
+                        self.spinnerStop()
+                    }
+
+//                    self.showProgress (pos: idxOfPopular)
+//                    print ("selectedPopularTagProps.name = \(self.selectedPopularTagProps.name)")
+//                    print ("selectedPopularTagProps.id   = \(self.selectedPopularTagProps.id) \n")
+//                    for idx in 0...self.synonymsList.synonymsArray.count - 1 {
+//                        allSynonyms += ", " + self.synonymsList.synonymsArray [idx]
+//                    }
+                })
+           }
+            
+            try! csv.write(row: [String (selectedPopularTagProps.id), selectedPopularTagProps.name, allSynonyms])
+            
             csv.stream.close()
 
         }
